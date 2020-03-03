@@ -1,0 +1,25 @@
+{
+    "rules": [
+        {
+            "name": "markdown2html",
+            "class": 1,
+            "policy": ["policy1"],
+            "input": ["llc_metric", "ipc_metric"],
+            "output": ["CPUShare"]
+        },
+        {
+            "name": "sentiment-analysis",
+            "class": 1,
+            "policy": ["policy1"],
+            "input": ["llc_metric", "ipc_metric"],
+            "output": ["CPUShare"]
+        },
+        {
+            "name": "ocr-image",
+            "class": 1,
+            "policy": ["policy1"],
+            "input": ["llc_metric", "ipc_metric"],
+            "output": ["CPUShare"]
+        }
+    ]
+}
