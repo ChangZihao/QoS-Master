@@ -1,13 +1,47 @@
 class Data:
     rules = {}
     registerInfo = {}
+    monitorData = {}
+    nodes = []
+    monitorThread = {}
+    monitorInterval = 0.5
+
+
+def GetAllMonitorThreads():
+    return Data.monitorThread
+
+
+def SetMonitorThread(node, thread):
+    Data.monitorThread[node] = thread
+
+
+def GetAllMonitorData():
+    return Data.monitorData
+
+
+def SetMonitorData(node, data):
+    Data.monitorData[node] = data
+
+
+def SetNodes(nodes):
+    Data.nodes = nodes
+
+
+def GetNodes():
+    return Data.nodes
 
 
 def SetRules(rules):
     Data.rules = rules
 
 
-def GetRules():
+def GetRule(app):
+    if app in Data.rules:
+        return Data.rules[app]
+    return None
+
+
+def GetAllRules():
     return Data.rules
 
 

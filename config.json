@@ -3,13 +3,17 @@
         {
             "name": "markdown2html",
             "class": 1,
-            "policy": ["policy1"],
+            "sla": {
+                "llc_metric": 1
+            },
+            "policy": ["simple"],
             "input": ["llc_metric", "ipc_metric"],
             "output": ["CPUShare"]
         },
         {
             "name": "sentiment-analysis",
             "class": 1,
+            "sla": {},
             "policy": ["policy1"],
             "input": ["llc_metric", "ipc_metric"],
             "output": ["CPUShare"]
@@ -17,9 +21,13 @@
         {
             "name": "ocr-image",
             "class": 1,
+            "sla": {},
             "policy": ["policy1"],
             "input": ["llc_metric", "ipc_metric"],
             "output": ["CPUShare"]
         }
+    ],
+    "nodes": [
+        "0.0.0.0"
     ]
 }

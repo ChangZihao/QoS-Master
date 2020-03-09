@@ -2,6 +2,9 @@ from flask import Flask, request
 import logger
 import logic
 import globalInfo
+import monitor
+
+
 app = Flask("flask.app")
 
 
@@ -17,6 +20,7 @@ def register_index():
     pod = request.args.get("pod")
     app.logger.info("Recive register: <%s, %s, %s>", node, appName, pod)
     if node is not None and appName is not None and pod is not None:
+        node = node.replace("-", ".")
         res = logic.register(node, appName, pod)
         if res is True:
             return 'register success!'
@@ -39,10 +43,13 @@ def stop_index():
 def loadConfig_index():
     app.logger.info("Recive load config.")
     logic.loadConfig()
-    print(globalInfo.GetRules())
+    print(globalInfo.GetAllRules())
     return 'Load config success!'
 
 
 if __name__ == '__main__':
     logger.create_logger("flask.app")
+    logic.loadConfig()
+    monitor.startMonitor()
     app.run(host='0.0.0.0', port=9002)
+    
