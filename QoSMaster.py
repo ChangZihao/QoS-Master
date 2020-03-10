@@ -50,6 +50,6 @@ def loadConfig_index():
 if __name__ == '__main__':
     logger.create_logger("flask.app")
     logic.loadConfig()
-    monitor.startMonitor()
+    # monitor.startMonitor()
     app.run(host='0.0.0.0', port=9002)
     

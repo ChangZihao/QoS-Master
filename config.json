@@ -1,17 +1,17 @@
 {
     "rules": [
         {
-            "name": "markdown2html",
+            "appname": "markdown2html-c6cg4",
             "class": 1,
             "sla": {
                 "llc_metric": 1
             },
             "policy": ["simple"],
-            "input": ["llc_metric", "ipc_metric"],
-            "output": ["CPUShare"]
+            "input": ["cpu_share"],
+            "output": ["cpu_share"]
         },
         {
-            "name": "sentiment-analysis",
+            "appname": "sentiment-analysis",
             "class": 1,
             "sla": {},
             "policy": ["policy1"],
@@ -19,7 +19,7 @@
             "output": ["CPUShare"]
         },
         {
-            "name": "ocr-image",
+            "appname": "ocr-image",
             "class": 1,
             "sla": {},
             "policy": ["policy1"],

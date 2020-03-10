@@ -19,3 +19,5 @@ def create_logger(name):
     file_handler.setFormatter(console_formatter)
 
     flask_logger.addHandler(file_handler)
+    
+    return flask_logger

@@ -1,29 +1,16 @@
-import threading
-import globalInfo
 import requests
-import time
 import logging
 from prometheus_client.parser import text_string_to_metric_families
 
 logger = logging.getLogger('flask.app')
 
 
-class MonitorThread(threading.Thread):
-    """Thread class with a stop() method. The thread itself has to check
-    regularly for the stopped() condition."""
-
+class Monitor:
     def __init__(self, node):
-        super(MonitorThread, self).__init__()
-        self._stop_event = threading.Event()
         self.node = node
 
-    def stop(self):
-        self._stop_event.set()
-
-    def stopped(self):
-        return self._stop_event.is_set()
-
-    def run(self):
+    def getData(self, metrics={}, labels={}):
+        retVal = []
         retry = 0
         while True:
             try:
@@ -33,27 +20,41 @@ class MonitorThread(threading.Thread):
             except:
                 retry = retry + 1
                 logger.error(
-                    "Fail to get monitor data from http://{}:9001/metrics. Retry {}".format(
-                        self.node, retry))
+                    "Fail to get monitor data from http://{}:9001/metrics. Retry {}".format(self.node, retry))
                 if retry >= 3:
                     logger.error(
-                    "Fail to get monitor data from http://{}:9001/metrics. Retry over!".format(
-                        self.node))
-                    globalInfo.DeleteMonitorThread(self.node)
-                    globalInfo.DeleteMonitorData(self.node)
-                    break
-                
+                        "Fail to get monitor data from http://{}:9001/metrics. Retry over!".format(self.node))
+                    return retVal
+
             else:
-                metrics = text_string_to_metric_families(response)
-                globalInfo.AddMonitorData(self.node, metrics)
-                print("after store", globalInfo.GetAllMonitorData())
-                time.sleep(globalInfo.Data.monitorInterval)
+                familys = text_string_to_metric_families(response)
+                for family in familys:
+                    for sample in family.samples:
+                        if len(metrics) == 0 or sample.name in metrics:
+                            for label in sample.labels.values():
+                                if len(labels) == 0 or label in labels:
+                                    retVal.append(sample)
+                                    continue
+                return retVal
 
+    def action(self, pod, resourceType, value):
+        payload = {"pod": pod, "resourceType": resourceType, "value": value}
+        retry = 0
+        while True:
+            try:
+                response = requests.get(
+                    "http://{}:9001/control".format(self.node), params=payload).content.decode("utf-8")
 
-def startMonitor():
-    threads = globalInfo.GetAllMonitorThreads()
-    for node in globalInfo.GetNodes():
-        if node not in threads:
-            t = MonitorThread(node)
-            threads[node] = t
-            t.start()
+            except:
+                retry = retry + 1
+                logger.error(
+                    "Fail to send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Retry {}".format(self.node, pod, resourceType, value, retry))
+                if retry >= 3:
+                    logger.error(
+                        "Fail to send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Retry over!{}".format(self.node, pod, resourceType, value))
+                    return False
+
+            else:
+                logger.info(
+                    "Send action to http://{}:9001/control?pod={}&resourceType={}&value={}.".format(self.node, pod, resourceType, value))
+                return True
