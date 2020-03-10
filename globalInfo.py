@@ -1,25 +1,41 @@
+import rule
+from multiprocessing import Manager
+
+
 class Data:
-    rules = {}
-    registerInfo = {}
-    monitorData = {}
+   
+    monitorData = Manager().dict()  # 生成一个可在多个进程之间传递和共享的字典
+    rules = {}          # key: rule.name. value: rule
+    registerInfo = {}   # key: pod, value:[node, app, pod]
+    # monitorData = {}    # key: node, value:metric_family(prom)
     nodes = []
-    monitorThread = {}
+    monitorThread = {}  # key: node, value thread
     monitorInterval = 0.5
 
 
-def GetAllMonitorThreads():
+def DeleteMonitorThread(node):
+    if node in Data.monitorThread:
+        Data.monitorThread.pop(node)
+
+
+def GetAllMonitorThreads() -> {}:
     return Data.monitorThread
 
 
-def SetMonitorThread(node, thread):
+def AddMonitorThread(node, thread):
     Data.monitorThread[node] = thread
+
+
+def DeleteMonitorData(node):
+    if node in Data.monitorData:
+        Data.monitorData.pop(node)
 
 
 def GetAllMonitorData():
     return Data.monitorData
 
 
-def SetMonitorData(node, data):
+def AddMonitorData(node, data):
     Data.monitorData[node] = data
 
 
@@ -27,7 +43,7 @@ def SetNodes(nodes):
     Data.nodes = nodes
 
 
-def GetNodes():
+def GetNodes() -> []:
     return Data.nodes
 
 
@@ -35,7 +51,7 @@ def SetRules(rules):
     Data.rules = rules
 
 
-def GetRule(app):
+def GetRule(app) -> rule.Rule:
     if app in Data.rules:
         return Data.rules[app]
     return None

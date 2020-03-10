@@ -2,7 +2,10 @@ import threading
 import globalInfo
 import requests
 import time
+import logging
 from prometheus_client.parser import text_string_to_metric_families
+
+logger = logging.getLogger('flask.app')
 
 
 class MonitorThread(threading.Thread):
@@ -21,13 +24,30 @@ class MonitorThread(threading.Thread):
         return self._stop_event.is_set()
 
     def run(self):
+        retry = 0
         while True:
-            response = requests.get(
-                "http://{}:9001/metrics".format(self.node)).content.decode("utf-8")
-            metrics = text_string_to_metric_families(response)
-            globalInfo.SetMonitorData(self.node, metrics)
-            time.sleep(globalInfo.Data.monitorInterval)
-            break
+            try:
+                response = requests.get(
+                    "http://{}:9001/metrics".format(self.node)).content.decode("utf-8")
+
+            except:
+                retry = retry + 1
+                logger.error(
+                    "Fail to get monitor data from http://{}:9001/metrics. Retry {}".format(
+                        self.node, retry))
+                if retry >= 3:
+                    logger.error(
+                    "Fail to get monitor data from http://{}:9001/metrics. Retry over!".format(
+                        self.node))
+                    globalInfo.DeleteMonitorThread(self.node)
+                    globalInfo.DeleteMonitorData(self.node)
+                    break
+                
+            else:
+                metrics = text_string_to_metric_families(response)
+                globalInfo.AddMonitorData(self.node, metrics)
+                print("after store", globalInfo.GetAllMonitorData())
+                time.sleep(globalInfo.Data.monitorInterval)
 
 
 def startMonitor():

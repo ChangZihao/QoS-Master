@@ -15,10 +15,10 @@ def register(node, app, pod):
             logger.info("Register failed, no matching rule: <%s, %s, %s>", node, app, pod)
             return False
         else:
-            if node not in globalInfo.GetAllMonitorThreads().keys():
-                t = monitor.MonitorThread(node)
-                globalInfo.SetMonitorThread(node, t)
-                t.start()
+            # if node not in globalInfo.GetAllMonitorThreads().keys():
+            #     t = monitor.MonitorThread(node)
+            #     globalInfo.SetMonitorThread(node, t)
+            #     t.start()
 
             rule.run(node, pod)
             logger.info("Register success: <%s, %s, %s>", node, app, pod)
@@ -48,7 +48,6 @@ def json2RuleList(d):
 def loadConfig():
     with open("config.json", "r") as configFile:
         config = json.load(configFile, object_hook=json2RuleList)
-        # print("load", rules)
         globalInfo.SetRules(config["rules"])
         globalInfo.SetNodes(config["nodes"])
     return True
