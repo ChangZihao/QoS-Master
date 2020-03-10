@@ -11,7 +11,8 @@ def register(node, app, pod):
         globalInfo.AddRegister([node, app, pod])
         rule = globalInfo.GetRule(app)
         if rule is None:
-            logger.info("Register failed, no matching rule: <%s, %s, %s>", node, app, pod)
+            logger.info(
+                "Register failed, no matching rule: <%s, %s, %s>", node, app, pod)
             return False
         else:
             rule.run(node, pod)
@@ -31,7 +32,7 @@ def stop():
 def json2RuleList(d):
     if "appname" in d:
         rule = config.Rule(d["appname"], d["class"], d["sla"],
-                    d["policy"], d["input"], d["output"])
+                           d["policy"], d["input"], d["output"])
         return rule
     elif "rules" in d:
         return {"rules": {r.appname: r for r in d["rules"]}}

@@ -1,5 +1,4 @@
 import policy.simple
-import globalInfo
 import monitor
 from multiprocessing import Process
 
@@ -28,8 +27,8 @@ class Rule:
 
     def run(self, node, pod):
         for po in self.policy:
-            proc = Process(target=ruleMap[po], args=(self, node, pod, monitor.Monitor(node),))
+            proc = Process(target=ruleMap[po], args=(
+                self, node, pod, monitor.Monitor(node),))
             self.process[pod] = proc
             proc.start()
             print(proc.pid)
-            
