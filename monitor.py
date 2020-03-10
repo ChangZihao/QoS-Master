@@ -56,5 +56,5 @@ class Monitor:
 
             else:
                 logger.info(
-                    "Send action to http://{}:9001/control?pod={}&resourceType={}&value={}.".format(self.node, pod, resourceType, value))
+                    "Send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Response:{}".format(self.node, pod, resourceType, value, response))
                 return True

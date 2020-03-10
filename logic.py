@@ -34,7 +34,7 @@ def json2RuleList(d):
                     d["policy"], d["input"], d["output"])
         return rule
     elif "rules" in d:
-        return {"rules": {r.appname: r for r in d["rules"]}, "nodes": d["nodes"]}
+        return {"rules": {r.appname: r for r in d["rules"]}}
     else:
         return {**d}
 
@@ -43,5 +43,4 @@ def loadConfig():
     with open("config.json", "r") as configFile:
         config = json.load(configFile, object_hook=json2RuleList)
         globalInfo.SetRules(config["rules"])
-        globalInfo.SetNodes(config["nodes"])
     return True

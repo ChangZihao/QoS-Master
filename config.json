@@ -26,7 +26,5 @@
             "input": ["llc_metric", "ipc_metric"],
             "output": ["CPUShare"]
         }
-    ],
-    "nodes": [
     ]
 }

@@ -2,7 +2,6 @@ from flask import Flask, request
 import logger
 import logic
 import globalInfo
-import monitor
 
 
 app = Flask("flask.app")
