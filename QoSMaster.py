@@ -27,22 +27,22 @@ def register_index():
             return 'register failed!'
     else:
         app.logger.error("Register failed by None value!")
-        return 'register failed!'
+        return 'Register failed!'
 
 
 @app.route('/stop')
 def stop_index():
     pod = request.args.get("pod")
     app.logger.info("Recive stop: <%s>", pod)
-    globalInfo.DeletRegister(pod)
-    return 'register success!'
+    if logic.stop(pod):
+        return 'Stop success!'
+    return 'Pod does not exit!'
 
 
 @app.route('/loadConfig')
 def loadConfig_index():
     app.logger.info("Recive load config.")
     logic.loadConfig()
-    print(globalInfo.GetAllRules())
     return 'Load config success!'
 
 
@@ -51,4 +51,3 @@ if __name__ == '__main__':
     logic.loadConfig()
     # monitor.startMonitor()
     app.run(host='0.0.0.0', port=9002)
-    

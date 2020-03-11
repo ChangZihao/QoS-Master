@@ -1,6 +1,7 @@
 import policy.simple
 import monitor
-from multiprocessing import Process
+import globalInfo
+from multiprocessing import Process, Value
 
 ruleMap = {
     "simple": policy.simple.simple
@@ -8,8 +9,6 @@ ruleMap = {
 
 
 class Rule:
-    process = {}  # key: pod, value: proc
-
     def __init__(self, appname, qosClass, sla, policy, input, output):
         self.appname = appname
         self.qosClass = qosClass
@@ -27,8 +26,8 @@ class Rule:
 
     def run(self, node, pod):
         for po in self.policy:
+            runFlag = Value('i', 0)
             proc = Process(target=ruleMap[po], args=(
-                self, node, pod, monitor.Monitor(node),))
-            self.process[pod] = proc
+                self, node, pod, monitor.Monitor(node), runFlag,))
+            globalInfo.AddPolicyProc(pod, {"flag": runFlag, "proc": proc})
             proc.start()
-            print(proc.pid)

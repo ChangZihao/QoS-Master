@@ -51,7 +51,7 @@ class Monitor:
                     "Fail to send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Retry {}".format(self.node, pod, resourceType, value, retry))
                 if retry >= 3:
                     logger.error(
-                        "Fail to send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Retry over!{}".format(self.node, pod, resourceType, value))
+                        "Fail to send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Retry over!".format(self.node, pod, resourceType, value))
                     return False
 
             else:

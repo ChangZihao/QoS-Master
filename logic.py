@@ -1,6 +1,8 @@
 import logging
 import json
 import globalInfo
+import time
+import threading
 import rule as config
 
 logger = logging.getLogger('flask.app')
@@ -24,9 +26,16 @@ def register(node, app, pod):
         return False
 
 
-def stop():
-    print("changzihao")
-    return 'ok'
+def stop(pod):
+    globalInfo.DeletRegister(pod)
+    proc = globalInfo.GetPolicyProc(pod)
+    if proc is not None:
+        proc["flag"].value = 1
+        threading.Thread(target=procClean, args=(pod,)).start()
+        return True
+    else:
+        logger.warning("Pod does not exit: %s", pod)
+        return False
 
 
 def json2RuleList(d):
@@ -45,3 +54,18 @@ def loadConfig():
         config = json.load(configFile, object_hook=json2RuleList)
         globalInfo.SetRules(config["rules"])
     return True
+
+
+def procClean(pod):
+    proc = globalInfo.GetPolicyProc(pod)
+    for _ in range(0, 3):
+        time.sleep(5)
+        if proc["flag"].value == 2:
+            proc["proc"].close()
+            logger.info("Clean policy proc of %s", pod)
+            return
+
+    logger.info("Clean policy violent proc of %s", pod)
+    proc["proc"].terminate()
+    time.sleep(5)
+    proc["proc"].close()

@@ -5,6 +5,21 @@ class Data:
     rules = {}          # key: rule.name. value: rule
     registerInfo = {}   # key: pod, value:[node, app, pod]
 
+    # key: pod, value:{flag: multiprocessing.Value.int, proc: multiprocessing.Process} mutiprocessing Value(bool)
+    # 0 -> runing; 1 -> tell policy to stop; 3 -> policy stopped, waitting to be recycle
+    policyProc = {}
+
+
+def GetPolicyProc(pod):
+    if pod in Data.policyProc:
+        return Data.policyProc[pod]
+    else:
+        return None
+
+
+def AddPolicyProc(pod, proc):
+    Data.policyProc[pod] = proc
+
 
 def SetNodes(nodes):
     Data.nodes = nodes
@@ -33,7 +48,8 @@ def AddRegister(list):
 
 
 def DeletRegister(pod):
-    return Data.registerInfo.pop(pod)
+    if pod in Data.registerInfo:
+        Data.registerInfo.pop(pod)
 
 
 def GetRegister(pod):
