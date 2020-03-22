@@ -14,13 +14,13 @@ def simple(rule, node, pod, monitor, flag):
             log.info("Simple get %s: %f", res[0].name, res[0].value)
             log.info("Simple get %s: %f", res[1].name, res[1].value)
             # Do action
-            if pod.find("markdown") != -1:
+            if rule.appname.find("markdown") != -1:
                 log.info("markdown: Alloc llc: %s", monitor.action(pod, "llc", 2))
                 log.info("markdown: Alloc cpushare: %s", monitor.action(pod, "cpu_share", 50))
-            elif pod.find("sentiment") != -1:
+            elif rule.appname.find("sentiment") != -1:
                 log.info("sentiment: Alloc llc: %s", monitor.action(pod, "llc", 2))
                 log.info("sentiment: Alloc cpushare: %s", monitor.action(pod, "cpu_share", 50))
-            elif pod.find("ocr") != -1:
+            elif rule.appname.find("ocr") != -1:
                 log.info("ocr: Alloc llc: %s", monitor.action(pod, "llc", 4))
                 log.info("ocr: Alloc cpushare: %s", monitor.action(pod, "cpu_share", 25))
             # stop
