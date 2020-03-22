@@ -1,5 +1,6 @@
 import requests
 import logging
+import logic
 from prometheus_client.parser import text_string_to_metric_families
 
 logger = logging.getLogger('flask.app')
@@ -58,3 +59,6 @@ class Monitor:
                 logger.info(
                     "Send action to http://{}:9001/control?pod={}&resourceType={}&value={}. Response:{}".format(self.node, pod, resourceType, value, response))
                 return True
+
+    def stop(self, pod):
+        logic.stop(pod)

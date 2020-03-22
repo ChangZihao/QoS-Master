@@ -10,16 +10,17 @@ def simple(rule, node, pod, monitor, flag):
         if flag.value == 0:
             log.info("simple: %s %s", node, pod)
             res = monitor.getData(rule.input, [pod])
-            cpushare = int(float(res[0].value)) + 25
-            log.info("simple cpu share value is: %s", cpushare)
-            # log.info(monitor.action(pod, rule.output[0], cpushare))
-            time.sleep(10)
-            i = i - 1
+            # get monitor data
+            log.info("Simple get %s: %f", res[0].name, res[0].value)
+            log.info("Simple get %s: %f", res[1].name, res[1].value)
+            # Do action
+            log.info("Alloc llc: %s", monitor.action(pod, "llc", 2))
+            log.info("Alloc cpushare: %s", monitor.action(pod, "cpu_share", 100))
+            
+            # stop
+            monitor.stop(pod)
 
         elif flag.value == 1:
             log.info("Simple policy Ready to stop!")
             flag.value = 2
-            # return
-
-        else:
-            continue
+            return
