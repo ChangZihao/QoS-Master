@@ -1,29 +1,33 @@
 {
     "rules": [
         {
-            "appname": "markdown2html",
+            "appname": "markdown2html-knmwk",
             "class": 1,
             "sla": {
-                "llc_metric": 1
+                "llc_capacity": 2,
+                "cpu_share": 1
             },
             "policy": ["simple"],
-            "input": ["cpu_share"],
-            "output": ["cpu_share"]
+            "input": ["llc_capacity", "cpu_share"],
+            "output": ["llc_capacity", "cpu_share"]
         },
         {
-            "appname": "sentiment-analysis",
+            "appname": "sentiment-analysis-jvr2w",
             "class": 1,
-            "sla": {},
-            "policy": ["policy1"],
-            "input": ["llc_metric", "ipc_metric"],
-            "output": ["CPUShare"]
+            "sla": {
+                "llc_capacity": 2,
+                "cpu_share": 1
+            },
+            "policy": ["simple"],
+            "input": ["llc_capacity", "cpu_share"],
+            "output": ["llc_capacity", "cpu_share"]
         },
         {
             "appname": "ocr-image-lgplq",
             "class": 1,
             "sla": {
                 "llc_capacity": 1,
-                "cpu_share": 1
+                "cpu_share": 2
             },
             "policy": ["simple"],
             "input": ["llc_capacity", "cpu_share"],

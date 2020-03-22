@@ -6,7 +6,7 @@ class Data:
     registerInfo = {}   # key: pod, value:[node, app, pod]
 
     # key: pod, value:{flag: multiprocessing.Value.int, proc: multiprocessing.Process} mutiprocessing Value(bool)
-    # 0 -> runing; 1 -> tell policy to stop; 3 -> policy stopped, waitting to be recycle
+    # 0 -> runing; 1 -> tell policy to stop; 2 -> policy stopped, waitting to be recycle
     policyProc = {}
 
 
