@@ -1,10 +1,12 @@
-import policy.simple
+import QoSPolicy.simple as simple
+import QoSPolicy.MAGI.magi as magi
 import monitor
 import globalInfo
 from multiprocessing import Process, Value
 
 ruleMap = {
-    "simple": policy.simple.simple
+    "simple": simple.Run,
+    "magi": magi.Run
 }
 
 

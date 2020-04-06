@@ -29,7 +29,7 @@
                 "llc_capacity": 1,
                 "cpu_share": 2
             },
-            "policy": ["simple"],
+            "policy": ["magi"],
             "input": ["llc_capacity", "cpu_share"],
             "output": ["llc_capacity", "cpu_share"]
         }

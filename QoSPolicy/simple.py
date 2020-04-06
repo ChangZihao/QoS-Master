@@ -1,10 +1,9 @@
-import time
 import logger
 
 log = logger.create_logger("policy.simple")
 
 
-def simple(rule, node, pod, monitor, flag):
+def Run(rule, node, pod, monitor, flag):
     i = 5
     while i > 0:
         if flag.value == 0:

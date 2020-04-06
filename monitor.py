@@ -9,9 +9,11 @@ logger = logging.getLogger('flask.app')
 class Monitor:
     def __init__(self, node):
         self.node = node
+        self.pods = {}
 
-    def getData(self, metrics={}, labels={}):
-        retVal = []
+    def getData(self, apps):
+        self.pods = {}
+        retVal = {}
         retry = 0
         while True:
             try:
@@ -31,14 +33,24 @@ class Monitor:
                 familys = text_string_to_metric_families(response)
                 for family in familys:
                     for sample in family.samples:
-                        if len(metrics) == 0 or sample.name in metrics:
-                            for label in sample.labels.values():
-                                if len(labels) == 0 or label in labels:
-                                    retVal.append(sample)
-                                    continue
+                        if sample.labels["app"] not in self.pods:
+                            self.pods[sample.labels["app"]] = set()
+                        self.pods[sample.labels["app"]].add(sample.labels["pod"])
+
+                        if sample.labels["app"] in apps:
+                            if sample.labels["app"] not in retVal:
+                                retVal[sample.labels["app"]] = {}
+                            retVal[sample.labels["app"]
+                                   ][sample.name] = sample.value
                 return retVal
 
+    def getPodNameByapp(self, app):
+        if app in self.pods:
+            return self.pods[app]
+        return []
+
     def action(self, pod, resourceType, value):
+        value = int(value)
         payload = {"pod": pod, "resourceType": resourceType, "value": value}
         retry = 0
         while True:
