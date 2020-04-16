@@ -21,7 +21,7 @@
 			"llc":2
 			},
 		"maximum_setups":{
-			"cpu_share":100,
+			"cpu_share":25,
 			"llc":2
 			}
 	},
@@ -30,11 +30,11 @@
 			"ipc":0
 			},
 		"minimum_setups":{
-			"cpu":25,
+			"cpu_share":25,
 			"llc":0
 			},
 		"maximum_setups":{
-			"cpu":100,
+			"cpu_share":25,
 			"llc":2
 			}
 	}

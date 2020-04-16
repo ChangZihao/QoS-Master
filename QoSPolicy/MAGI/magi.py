@@ -179,6 +179,8 @@ class CpuController:
         else:
             t = self.throttled_group.pop()
             print("    throttled_group " + t + " has been selected")
+        print("controlConfig", str(self.controlConfig))
+        print("currentInfo", str(self.currentInfo))
         if self.controlConfig[t]["maximum_setups"]["cpu_share"] > self.currentInfo[t]["cpu_share"]:
             for pod in self.monitor.getPodNameByapp(t):
                 self.monitor.action(
@@ -212,6 +214,7 @@ def Run(rule, node, pod, monitor, flag):
     controll_config = json.loads(open("QoSPolicy/MAGI/magiConfig.json", 'r').read())
     print("start magi for pod %s", pod)
     print(controll_config)
+    time.sleep(20)
     # here samples are like : ["app1","app2"]
     c = CpuController(controll_config, [
                       "markdown2html-knmwk", "ocr-image-lgplq", "sentiment-analysis-jvr2w"], True, True, False, 0.5, 2, monitor)
