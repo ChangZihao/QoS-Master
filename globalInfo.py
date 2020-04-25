@@ -2,13 +2,17 @@ import rule
 
 
 class Data:
+    # config.json 中定义的规则
     rules = {}          # key: rule.name. value: rule
+    
+    # pod的注册信息
     registerInfo = {}   # key: pod, value:[node, app, pod]
 
     # key: pod, value:{flag: multiprocessing.Value.int, proc: multiprocessing.Process} mutiprocessing Value(bool)
     # 0 -> runing; 1 -> tell policy to stop; 2 -> policy stopped, waitting to be recycle
     policyProc = {}
 
+# 下面是数据交互接口，用于查询、设置全局数据。
 
 def GetPolicyProc(pod):
     if pod in Data.policyProc:
